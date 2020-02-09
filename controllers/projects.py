@@ -46,17 +46,17 @@ def getAProjectById(db_session, id):
 def updateAProjectByID(db_session, id, name, description):
     try:
         project = db_session.query(Project).filter(Project.id == id).first()
-        if name != None:
-            project.name = name
-        if description != None:
-            project.description = description
-        db_session.commit()
     except BaseException as e:
          errorRes = {'status': 'Error', 'message': e.message}
          return errorRes
     if project == None:
         errorResp = {'status': 'Error', 'message': 'project not found'}
         return errorResp
+    if name != None:
+        project.name = name
+    if description != None:
+        project.description = description
+    db_session.commit()
     res = {'status': 'Success', 'data': 'Project successfully updated'}
     return res
 
@@ -64,13 +64,28 @@ def updateAProjectByID(db_session, id, name, description):
 def updateAProjectCompleted(db_session, id):
     try:
         project = db_session.query(Project).filter(Project.id == id).first()
-        project.completed = True
-        db_session.commit()
     except BaseException as e:
          errorRes = {'status': 'Error', 'message': e.message}
          return errorRes
     if project == None:
         errorResp = {'status': 'Error', 'message': 'project not found'}
         return errorResp
+    project.completed = True
+    db_session.commit()
     res = {'status': 'Success', 'data': 'Project successfully completed'}
+    return res
+
+@jwt_required
+def deleteAJobByID(db_session, id):
+    try:
+        project = db_session.query(Project).filter(Project.id == id).first()
+    except BaseException as e:
+         errorRes = {'status': 'Error', 'message': e.message}
+         return errorRes
+    if project == None:
+        errorResp = {'status': 'Error', 'message': 'project not found'}
+        return errorResp
+    db_session.delete(project)
+    db_session.commit()
+    res = {'status': 'Success', 'data': 'Project successfully deleted'}
     return res
