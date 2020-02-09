@@ -1,15 +1,17 @@
 from flask import Flask
 from flask import request
 from flask import jsonify, Response
+from flask_request_params import bind_request_params
 import json
 from flask_jwt_extended import JWTManager
 from db.database import db_session, init_db
 from controllers.register import signup
 from controllers.auth import sign_in
-from controllers.projects import addProjects, getAllProjects
+from controllers.projects import addProjects, getAllProjects, getAProjectById
 
 app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
+app.before_request(bind_request_params)
 
 init_db()
 jwt = JWTManager(app)
@@ -40,6 +42,11 @@ def createProject():
     completed = False
     response = addProjects(db_session, name, description, completed)
     return jsonify(response)
+
+@app.route('/api/projects/<project_id>', methods=["GET"])
+def findAProjectById(project_id):
+    return getAProjectById(db_session, project_id)
+
 @app.route('/api/projects', methods=["GET"])
 def listAllProjects():
     return jsonify(getAllProjects(db_session))

@@ -17,9 +17,9 @@ def addProjects(db_session, name, description, completed):
 @jwt_required
 def getAllProjects(db_session):
     try:
-         projects = db_session.query(Project.name, Project.description).all()
-         print(projects)
-         print("THis is it")
+         projects = []
+         for row in db_session.query(Project).all():
+            projects.append({'id': row.id, 'name': row.name, 'description': row.description, 'completed': row.completed})
     except BaseException as e:
          errorRes = {'status': 'Error', 'message': e.message}
          return errorRes
@@ -27,4 +27,17 @@ def getAllProjects(db_session):
         errorResp = {'status': 'Error', 'message': 'projects not found'}
         return errorResp
     res = {'status': 'Success', 'data': projects}
+    return res
+
+@jwt_required
+def getAProjectById(db_session, id):
+    try:
+        project = db_session.query(Project).filter(Project.id == id).first()
+    except BaseException as e:
+         errorRes = {'status': 'Error', 'message': e.message}
+         return errorRes
+    if project == None:
+        errorResp = {'status': 'Error', 'message': 'projects not found'}
+        return errorResp
+    res = {'status': 'Success', 'data': project.__repr__()}
     return res

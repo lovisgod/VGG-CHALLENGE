@@ -22,7 +22,7 @@ class Project(object):
 
 #   this is what is returned when a query is performed on the table
     def __repr__(self):
-        return  self.name
+        return  { 'name': self.name , 'description': self.description, 'completed': self.completed}
 
 class Action(object):
     query = db_session.query_property()
