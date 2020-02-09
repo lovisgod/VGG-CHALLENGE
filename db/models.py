@@ -10,7 +10,7 @@ class User(object):
         self.password = password
 
     def __repr__(self):
-        return '<User %r>' % (self.name)
+        return self.name
 
 class Project(object):
     query = db_session.query_property()
