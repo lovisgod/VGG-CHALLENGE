@@ -41,3 +41,21 @@ def getAProjectById(db_session, id):
         return errorResp
     res = {'status': 'Success', 'data': project.__repr__()}
     return res
+
+@jwt_required
+def updateAProjectByID(db_session, id, name, description):
+    try:
+        project = db_session.query(Project).filter(Project.id == id).first()
+        if name != None:
+            project.name = name
+        if description != None:
+            project.description = description
+        db_session.commit()
+    except BaseException as e:
+         errorRes = {'status': 'Error', 'message': e.message}
+         return errorRes
+    if project == None:
+        errorResp = {'status': 'Error', 'message': 'projects not found'}
+        return errorResp
+    res = {'status': 'Success', 'data': 'Project successfully updated'}
+    return res

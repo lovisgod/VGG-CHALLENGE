@@ -7,7 +7,7 @@ from flask_jwt_extended import JWTManager
 from db.database import db_session, init_db
 from controllers.register import signup
 from controllers.auth import sign_in
-from controllers.projects import addProjects, getAllProjects, getAProjectById
+from controllers.projects import addProjects, getAllProjects, getAProjectById, updateAProjectByID
 
 app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
@@ -50,6 +50,12 @@ def findAProjectById(project_id):
 @app.route('/api/projects', methods=["GET"])
 def listAllProjects():
     return jsonify(getAllProjects(db_session))
+
+@app.route('/api/projects/<project_id>', methods=['PUT'])
+def updateProjectById(project_id):
+    name = request.form.get('name')
+    description = request.form.get('description')
+    return jsonify(updateAProjectByID(db_session, project_id, name, description))
 
 
 # close db when the app is down. this handle the lifecycle of the db to avoid memory leakage
