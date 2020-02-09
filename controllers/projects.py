@@ -13,3 +13,18 @@ def addProjects(db_session, name, description, completed):
         return errorRes
     res = {'status': 'Success', 'message': 'Project successfully added'}
     return res
+
+@jwt_required
+def getAllProjects(db_session):
+    try:
+         projects = db_session.query(Project.name, Project.description).all()
+         print(projects)
+         print("THis is it")
+    except BaseException as e:
+         errorRes = {'status': 'Error', 'message': e.message}
+         return errorRes
+    if projects == None:
+        errorResp = {'status': 'Error', 'message': 'projects not found'}
+        return errorResp
+    res = {'status': 'Success', 'data': projects}
+    return res
