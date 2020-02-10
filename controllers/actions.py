@@ -77,7 +77,7 @@ def getAnActionByActionAndProjectId(db_session, project_id, action_id):
             errorResp = {'status': 'Error', 'message': 'project not found'}
             return errorResp
         action = db_session.query(Action).filter(Action.id == action_id, project_id == project_id).first()
-        if project is None:
+        if action is None:
             errorRes = {'status': 'Error', 'message': 'action not found'}
             return errorRes
     except BaseException as e:
@@ -91,49 +91,43 @@ def getAnActionByActionAndProjectId(db_session, project_id, action_id):
 
 
 @jwt_required
-def updateAProjectByID(db_session, id, name, description):
+def updateAnActionByID(db_session, projectId, actionId, description, note):
     try:
-        project = db_session.query(Project).filter(Project.id == id).first()
+        project = db_session.query(Project).filter(Project.id == projectId).first()
+        if project is None:
+            errorResp = {'status': 'Error', 'message': 'project not found'}
+            return errorResp
+        action = db_session.query(Action).filter(Action.id == actionId, projectId == projectId).first()
+        if action is None:
+            errorRes = {'status': 'Error', 'message': 'action not found'}
+            return errorRes
     except BaseException as e:
-         errorRes = {'status': 'Error', 'message': e.message}
-         return errorRes
-    if project == None:
-        errorResp = {'status': 'Error', 'message': 'project not found'}
-        return errorResp
-    if name != None:
-        project.name = name
-    if description != None:
-        project.description = description
+        errorRes = {'status': 'Error', 'message': e.message}
+        return errorRes
+    if note is not None:
+        action.note = note
+    if description is not None:
+        action.description = description
     db_session.commit()
-    res = {'status': 'Success', 'data': 'Project successfully updated'}
+    res = {'status': 'Success', 'data': 'Project action successfully updated'}
     return res
 
-@jwt_required
-def updateAProjectCompleted(db_session, id):
-    try:
-        project = db_session.query(Project).filter(Project.id == id).first()
-    except BaseException as e:
-         errorRes = {'status': 'Error', 'message': e.message}
-         return errorRes
-    if project == None:
-        errorResp = {'status': 'Error', 'message': 'project not found'}
-        return errorResp
-    project.completed = True
-    db_session.commit()
-    res = {'status': 'Success', 'data': 'Project successfully completed'}
-    return res
 
 @jwt_required
-def deleteAJobByID(db_session, id):
+def deleteAnActionByID(db_session, projectId, actionId):
     try:
-        project = db_session.query(Project).filter(Project.id == id).first()
+        project = db_session.query(Project).filter(Project.id == projectId).first()
+        if project is None:
+            errorResp = {'status': 'Error', 'message': 'project not found'}
+            return errorResp
+        action = db_session.query(Action).filter(Action.id == actionId, projectId == projectId).first()
+        if action is None:
+            errorRes = {'status': 'Error', 'message': 'action not found'}
+            return errorRes
     except BaseException as e:
-         errorRes = {'status': 'Error', 'message': e.message}
-         return errorRes
-    if project == None:
-        errorResp = {'status': 'Error', 'message': 'project not found'}
-        return errorResp
-    db_session.delete(project)
+        errorRes = {'status': 'Error', 'message': e.message}
+        return errorRes
+    db_session.delete(action)
     db_session.commit()
-    res = {'status': 'Success', 'data': 'Project successfully deleted'}
+    res = {'status': 'Success', 'data': 'Action successfully deleted'}
     return res

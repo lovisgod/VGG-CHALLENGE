@@ -8,7 +8,13 @@ from db.database_util import db_session, init_db
 from controllers.register import signup
 from controllers.auth import sign_in
 from controllers.projects import addProjects, getAllProjects, getAProjectById, updateAProjectByID, updateAProjectCompleted, deleteAJobByID
-from controllers.actions import addAction, getAllActions, getActionsForAProject, getAnActionById, getAnActionByActionAndProjectId
+from controllers.actions import (addAction,
+   getAllActions, 
+   getActionsForAProject, 
+   getAnActionById, 
+   getAnActionByActionAndProjectId, 
+   updateAnActionByID,
+   deleteAnActionByID)
 
 app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
@@ -100,6 +106,17 @@ def getAnAction(actionId):
 @app.route('/api/projects/<projectId>/actions/<actionId>', methods=['GET'])
 def getAnActionByProjectAndId(projectId, actionId):
     return jsonify(getAnActionByActionAndProjectId(db_session, projectId, actionId))
+
+
+@app.route('/api/projects/<projectId>/actions/<actionId>', methods=['PUT'])
+def updateActionById(projectId, actionId):
+    note = request.form.get('note')
+    description = request.form.get('description')
+    return jsonify(updateAnActionByID(db_session, projectId, actionId, description, note))
+
+@app.route('/api/projects/<projectId>/actions/<actionId>', methods=['DELETE'])
+def deleteAnActionById(projectId, actionId):
+    return jsonify(deleteAnActionByID(db_session, projectId, actionId))
 
 # close db when the app is down. this handle the lifecycle of the db to avoid memory leakage
 @app.teardown_appcontext
