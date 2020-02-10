@@ -34,18 +34,61 @@ def getAllActions(db_session):
     res = {'status': 'Success', 'data': actions}
     return res
 
+
 @jwt_required
-def getAProjectById(db_session, id):
+def getActionsForAProject(db_session, id):
     try:
         project = db_session.query(Project).filter(Project.id == id).first()
+        if project is None:
+            errorResp = {'status': 'Error', 'message': 'project not found'}
+            return errorResp
+        actions = []
+        for row in db_session.query(Action).filter(Action.project_id == id).all():
+            actions.append({'id': row.id, 'project_id': row.project_id, 'description': row.description, 'note': row.note})
     except BaseException as e:
-         errorRes = {'status': 'Error', 'message': e.message}
-         return errorRes
-    if project == None:
-        errorResp = {'status': 'Error', 'message': 'project not found'}
+        errorRes = {'status': 'Error', 'message': e.message}
+        return errorRes
+    if actions is None:
+        errorResp = {'status': 'Error', 'message': 'actions not found'}
         return errorResp
-    res = {'status': 'Success', 'data': project.__repr__()}
+    res = {'status': 'Success', 'data': actions}
     return res
+
+
+@jwt_required
+def getAnActionById(db_session, id):
+    try:
+        action = db_session.query(Action).filter(Action.id == id).first()
+    except BaseException as e:
+        errorRes = {'status': 'Error', 'message': e.message}
+        return errorRes
+    if action is None:
+        errorResp = {'status': 'Error', 'message': 'action not found'}
+        return errorResp
+    res = {'status': 'Success', 'data': action.__repr__()}
+    return res
+
+
+@jwt_required
+def getAnActionByActionAndProjectId(db_session, project_id, action_id):
+    try:
+        project = db_session.query(Project).filter(Project.id == project_id).first()
+        if project is None:
+            errorResp = {'status': 'Error', 'message': 'project not found'}
+            return errorResp
+        action = db_session.query(Action).filter(Action.id == action_id, project_id == project_id).first()
+        if project is None:
+            errorRes = {'status': 'Error', 'message': 'action not found'}
+            return errorRes
+    except BaseException as e:
+        errorRes = {'status': 'Error', 'message': e.message}
+        return errorRes
+    if action is None:
+        errorResp = {'status': 'Error', 'message': 'action not found'}
+        return errorResp
+    res = {'status': 'Success', 'data': action.__repr__()}
+    return res
+
 
 @jwt_required
 def updateAProjectByID(db_session, id, name, description):

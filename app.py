@@ -8,7 +8,7 @@ from db.database_util import db_session, init_db
 from controllers.register import signup
 from controllers.auth import sign_in
 from controllers.projects import addProjects, getAllProjects, getAProjectById, updateAProjectByID, updateAProjectCompleted, deleteAJobByID
-from controllers.actions import addAction, getAllActions
+from controllers.actions import addAction, getAllActions, getActionsForAProject, getAnActionById, getAnActionByActionAndProjectId
 
 app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
@@ -87,6 +87,19 @@ def listAllActions():
     return jsonify(getAllActions(db_session))
 
 
+@app.route('/api/projects/<projectId>/actions', methods=['GET'])
+def listProjectActions(projectId):
+    return jsonify(getActionsForAProject(db_session, projectId))
+
+
+@app.route('/api/actions/<actionId>', methods=['GET'])
+def getAnAction(actionId):
+    return jsonify(getAnActionById(db_session, actionId))
+
+
+@app.route('/api/projects/<projectId>/actions/<actionId>', methods=['GET'])
+def getAnActionByProjectAndId(projectId, actionId):
+    return jsonify(getAnActionByActionAndProjectId(db_session, projectId, actionId))
 
 # close db when the app is down. this handle the lifecycle of the db to avoid memory leakage
 @app.teardown_appcontext
