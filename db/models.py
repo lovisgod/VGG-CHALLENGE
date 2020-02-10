@@ -2,6 +2,7 @@ from sqlalchemy import Table, Column, Integer, String, Boolean
 from sqlalchemy.orm import mapper
 from db.database_util import metadata, db_session
 
+
 class User(object):
     query = db_session.query_property()
 
@@ -11,6 +12,7 @@ class User(object):
 
     def __repr__(self):
         return self.name
+
 
 class Project(object):
     query = db_session.query_property()
@@ -22,7 +24,8 @@ class Project(object):
 
 #   this is what is returned when a query is performed on the table
     def __repr__(self):
-        return  { 'name': self.name , 'description': self.description, 'completed': self.completed}
+        return {'name': self.name, 'description': self.description, 'completed': self.completed}
+
 
 class Action(object):
     query = db_session.query_property()
@@ -33,13 +36,14 @@ class Action(object):
         self.note = note
 
     def __repr__(self):
-        return '<Action %r>' % (self.project_id)
+        return {'name': self.project_id, 'description': self.description, 'note': self.note}
+
 
 projects = Table('projects', metadata,
     Column('id', Integer, primary_key=True),
     Column('name', String(50), unique=True),
     Column('description', String(120)),
-    Column('completed', Boolean, default= False, nullable= False)
+    Column('completed', Boolean, default=False, nullable=False)
 )
 users = Table('users', metadata,
     Column('id', Integer, primary_key=True),

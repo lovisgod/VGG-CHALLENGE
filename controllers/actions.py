@@ -1,17 +1,21 @@
-from db.models import Action
+from db.models import Action, Project
 import json
 from flask_jwt_extended import create_access_token, jwt_required
 
 @jwt_required
-def addProjects(db_session, name, description, completed):
+def addAction(db_session, project_id, description, note):
     try:
-         project = Project(name=name, description= description, completed= completed)
-         db_session.add(project)
-         db_session.commit()
+        project = db_session.query(Project).filter(Project.id == project_id).first()
+        if project is None:
+            errorResp = {'status': 'Error', 'message': 'project not found'}
+            return errorResp
+        action = Action(project_id=project_id, description=description, note=note)
+        db_session.add(action)
+        db_session.commit()
     except BaseException as e:
         errorRes = {'status': 'Error', 'message': e.message}
         return errorRes
-    res = {'status': 'Success', 'message': 'Project successfully added'}
+    res = {'status': 'Success', 'message': 'Action successfully added'}
     return res
 
 @jwt_required
