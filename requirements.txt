@@ -39,7 +39,6 @@ PyJWT==1.7.1
 pyOpenSSL==17.5.0
 pyparsing==2.2.0
 pyproj==1.9.5.1
-pyspatialite==3.0.1
 python-dateutil==2.6.1
 pytz==2018.3
 pyxdg==0.25
