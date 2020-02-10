@@ -1,6 +1,6 @@
 from sqlalchemy import Table, Column, Integer, String, Boolean
 from sqlalchemy.orm import mapper
-from database import metadata, db_session
+from db.database_util import metadata, db_session
 
 class User(object):
     query = db_session.query_property()

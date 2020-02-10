@@ -4,7 +4,7 @@ from flask import jsonify, Response
 from flask_request_params import bind_request_params
 import json
 from flask_jwt_extended import JWTManager
-from db.database import db_session, init_db
+from db.database_util import db_session, init_db
 from controllers.register import signup
 from controllers.auth import sign_in
 from controllers.projects import addProjects, getAllProjects, getAProjectById, updateAProjectByID, updateAProjectCompleted, deleteAJobByID
