@@ -18,19 +18,20 @@ def addAction(db_session, project_id, description, note):
     res = {'status': 'Success', 'message': 'Action successfully added'}
     return res
 
+
 @jwt_required
-def getAllProjects(db_session):
+def getAllActions(db_session):
     try:
-         projects = []
-         for row in db_session.query(Project).all():
-            projects.append({'id': row.id, 'name': row.name, 'description': row.description, 'completed': row.completed})
+        actions = []
+        for row in db_session.query(Action).all():
+            actions.append({'id': row.id, 'project_id': row.project_id, 'description': row.description, 'note': row.note})
     except BaseException as e:
-         errorRes = {'status': 'Error', 'message': e.message}
-         return errorRes
-    if projects == None:
-        errorResp = {'status': 'Error', 'message': 'projects not found'}
+        errorRes = {'status': 'Error', 'message': e.message}
+        return errorRes
+    if actions is None:
+        errorResp = {'status': 'Error', 'message': 'actions not found'}
         return errorResp
-    res = {'status': 'Success', 'data': projects}
+    res = {'status': 'Success', 'data': actions}
     return res
 
 @jwt_required

@@ -8,7 +8,7 @@ from db.database_util import db_session, init_db
 from controllers.register import signup
 from controllers.auth import sign_in
 from controllers.projects import addProjects, getAllProjects, getAProjectById, updateAProjectByID, updateAProjectCompleted, deleteAJobByID
-from controllers.actions import addAction
+from controllers.actions import addAction, getAllActions
 
 app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = 'jwt-secret-string'
@@ -80,6 +80,11 @@ def addActionToProject(projectId):
     description = request.form.get('description')
     note = request.form.get('note')
     return jsonify(addAction(db_session, projectId, description, note))
+
+
+@app.route('/api/actions', methods=['GET'])
+def listAllActions():
+    return jsonify(getAllActions(db_session))
 
 
 
