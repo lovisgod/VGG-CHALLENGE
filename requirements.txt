@@ -13,8 +13,6 @@ Flask==1.1.1
 Flask-JWT-Extended==3.24.1
 Flask-request-params==0.3.0
 Flask-SQLAlchemy==2.4.1
-folder-color==0.0.88
-folder-color-common==0.0.88
 future==0.15.2
 GDAL==2.2.2
 gunicorn==19.10.0
