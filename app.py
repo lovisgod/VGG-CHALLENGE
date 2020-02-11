@@ -24,7 +24,7 @@ init_db()
 jwt = JWTManager(app)
 
 
-@app.route('/')
+@app.route('/', methods=['GET'])
 def home():
     return "Hello VGG"
 
